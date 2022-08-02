@@ -21,27 +21,25 @@ rerooted_tree = guide_tree_group.shortest_reroot(mash_tree_path)
 # Visited_node_MHG: internal node(key), MHG set(value); remaining_pair: list of remaining 
 visited_node_MHG, remaining_pair = guide_tree_group.initial_taxa_internal(rerooted_tree)
 # ready_MHG: None if next internal is NOT ready, otherwise key: internal node, value: MHG set
-next_internal_ready_boolean, internal_node_taxa, ready_MHG_dict, visited_node_MHG, remaining_pair = guide_tree_group.give_me_the_next_visit(visited_node_MHG, remaining_pair)
-if next_internal_ready_boolean:
-    #这里现在不行 assume的是两个children都是leaf taxa；如果一个children是internal node，blastn_next要重新写
-    blastn_out_path = blastn_process.blastn_next(ready_MHG_dict, blastn_dir, temp_genome_dir)
-    df, check_list = MHG_partition.parseBlastXML(blastn_out_path)
-    df = MHG_partition.trim_fully_contain(df, check_list)
-    if '|' not in internal_node_taxa:
-        # Case 1: two children nodes are both leaf nodes
-        mhg_list = MHG_partition.mhg(df, 2)
-        pan_mhg_list = process_mhg.pangenome(mhg_list, accDic)
+while remaining_pair:
+    next_internal_ready_boolean, internal_node_taxa, ready_MHG_dict, visited_node_MHG, remaining_pair = guide_tree_group.give_me_the_next_visit(visited_node_MHG, remaining_pair)
+    if next_internal_ready_boolean:
+        #这里现在不行 assume的是两个children都是leaf taxa；如果一个children是internal node，blastn_next要重新写
+        blastn_out_path = blastn_process.blastn_next(ready_MHG_dict, blastn_dir, temp_genome_dir)
+        df, check_list = MHG_partition.parseBlastXML(blastn_out_path)
+        df = MHG_partition.trim_fully_contain(df, check_list)
+        if '|' not in internal_node_taxa:
+            # Case 1: two children nodes are both leaf nodes
+            mhg_list = MHG_partition.mhg(df, 2)
+            pan_mhg_list = process_mhg.pangenome(mhg_list, accDic)
+        else:
+            # Case 2: two children nodes have an internal node
+            print("two children nodes have an internal node")
+            mhg_list = MHG_partition.mhg(df, 1)
+            pan_mhg_list = consensus_mhg.consensus_to_blocks(mhg_list, ready_MHG_dict)
         refName_refBlcok_dict, ref_mhg_dict = process_mhg.mafft_consensus_mhg(pan_mhg_list, accDic)
         visited_node_MHG[internal_node_taxa] = [refName_refBlcok_dict, ref_mhg_dict]
         # Convert consensus ref alignments to sequences, write to a new fasta and be ready for next blastn
         process_mhg.ref_alignment_to_fasta(internal_node_taxa, temp_genome_dir, refName_refBlcok_dict)
     else:
-        # Case 2: two children nodes have an internal node
-        print("two children nodes have an internal node")
-        mhg_list = MHG_partition.mhg(df, 1)
-        pan_mhg_list = consensus_mhg.consensus_to_blocks(mhg_list, ready_MHG_dict)
-        
-        
-else:
-    print("Next internal node is not ready")
-
+        print("Next internal node is not ready")

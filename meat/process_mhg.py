@@ -153,6 +153,8 @@ for seqName in lines:
     accDic[seqName] = seq
 
 mhg_list = pangenome([((('G000006925', (1321493, 1385605)), (1337273, 1337298), '-'), (('G000299455', (2818030, 2881682)), (2865878, 2865903), '+')), ((('G000006925', (4805348, 4805944)), (4805348, 4805944), '+'), (('G000299455', (1462059, 1462655)), (1462059, 1462655), '-')), ((('G000006925', (4706174, 4706226)), (4706174, 4706226), '+'), (('G000299455', (3211410, 3211462)), (3211410, 3211462), '+')), ((('G000006925', (2756889, 2766574)), (2765664, 2765902), '-'), (('G000299455', (1277999, 1282453)), (1278671, 1278909), '+')), ((('G000006925', (2849870, 2870340)), (2858926, 2862839), '-'), (('G000299455', (1167028, 1178705)), (1167028, 1170941), '+'))], accDic)
-print(mhg_list)
-# refName_refBlcok_dict, ref_mhg_dict = mafft_consensus_mhg(mhg_list, accDic)
+# print(mhg_list)
+refName_refBlcok_dict, ref_mhg_dict = mafft_consensus_mhg(mhg_list, accDic)
+for ref_block in ref_mhg_dict.keys():
+    print(ref_block.block_string)
 # ref_alignment_to_fasta("test_me",".",refName_refBlcok_dict)
