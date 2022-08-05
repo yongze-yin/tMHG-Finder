@@ -12,23 +12,20 @@ def tree_height(node):
     """
     return 0 if node.is_leaf() else max([1+tree_height(child) for child in node.child_nodes()])
 
-def shortest_reroot(guide_tree_path: string) -> string:
+def shortest_reroot(guide_tree_path: string):
     """
     Given a directory to a guide tree, reroot on every node and pick the one with
-    the least level height, return the newick tree string. 
+    the least level height, return the newick tree obj. 
     """
     guide_tree = dendropy.Tree.get(path = guide_tree_path, schema = 'newick', rooting='force-rooted')
     best_tree, least_height = None, math.inf
     for node in guide_tree.postorder_node_iter():
         guide_tree_node_copy = copy.deepcopy(guide_tree)
         guide_tree_node_copy.reroot_at_node(copy.deepcopy(node))
-        # print("taxa amount", len([str(taxon).replace("'","") for taxon in guide_tree_node_copy.taxon_namespace]))
         height = tree_height(guide_tree_node_copy.seed_node)
         if height < least_height:
             best_tree = guide_tree_node_copy
             least_height = height
-    # print('best tree taxa amount',len([str(taxon).replace("'","") for taxon in best_tree.taxon_namespace]))
-    # return best_tree.as_string(schema='newick')
     return best_tree
 
 def internal_node_leaves(internal):
@@ -41,7 +38,17 @@ def internal_node_leaves(internal):
     left_child = children[1]
     right_child_leaves = [str(n.taxon).replace("'","") for n in right_child.leaf_nodes()]
     left_child_leaves = [str(n.taxon).replace("'","") for n in left_child.leaf_nodes()]
-    return ','.join(["|".join(right_child_leaves),"|".join(left_child_leaves)])
+    merged_children_string = ','.join(["|".join(right_child_leaves),"|".join(left_child_leaves)])
+    if len(children) == 2:
+        # Tree is bifurcating
+        return [merged_children_string]
+    else:
+        # Tree is trifurcating
+        other_child = children[2]
+        other_child_leaves = [str(n.taxon).replace("'","") for n in other_child.leaf_nodes()]
+        brother_merged_leaves = right_child_leaves + left_child_leaves
+        super_merged_children_string = ','.join(["|".join(other_child_leaves),"|".join(brother_merged_leaves)])
+        return [merged_children_string, super_merged_children_string]
     # print(len(internal.leaf_nodes()),internal, [str(n.taxon).replace("'","") for n in internal.leaf_nodes()])
     # print(len(left_child.leaf_nodes()),left_child, [str(n.taxon).replace("'","") for n in left_child.leaf_nodes()])
     # print(len(right_child.leaf_nodes()),right_child, [str(n.taxon).replace("'","") for n in right_child.leaf_nodes()])
@@ -56,10 +63,11 @@ def initial_taxa_internal(tree):
     time_node = defaultdict(lambda: [])
     taxa = [str(taxon).replace("'","") for taxon in tree.taxon_namespace]
     for internal in internal_node_list:
-        leaf_string = internal_node_leaves(internal)
-        level = max([branch.count('|') for branch in leaf_string.split(',')])
-        below_taxa_count = 2 + leaf_string.count("|")
-        time_node[level].append(leaf_string)
+        leaf_string_list = internal_node_leaves(internal)
+        for leaf_string in leaf_string_list:
+            level = max([branch.count('|') for branch in leaf_string.split(',')])
+            below_taxa_count = 2 + leaf_string.count("|")
+            time_node[level].append(leaf_string)
     remaining_pair = []
     for level in sorted(time_node.keys()):
         remaining_pair += time_node[level]
@@ -86,3 +94,7 @@ def give_me_the_next_visit(visited_node_MHG, remaining_pair):
                 ready_MHG[n] = copy.deepcopy(visited_node_MHG[n])
             return True, node, ready_MHG, visited_node_MHG, remaining_pair
     return False, None, None, visited_node_MHG, remaining_pair
+
+# rerooted_tree = shortest_reroot("nj_far.newick")
+# visited_node_MHG, remaining_pair = initial_taxa_internal(rerooted_tree)
+# print("remaining_pair",remaining_pair)
