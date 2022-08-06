@@ -2,7 +2,6 @@ import os
 from io import StringIO
 import pandas as pd
 from itertools import groupby
-from Bio.Align import AlignInfo
 from Bio import AlignIO
 from collections import Counter
 import subprocess

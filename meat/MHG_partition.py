@@ -1497,8 +1497,11 @@ def main(logger, G, block_in_mhg, tempBedFile = 'bedtoolTemp.txt'):
     
     modules = list(set([tuple(sorted(list(m_graph.nodes))) for m_graph in nodePathToModuleDic.values()]))
     modules = [m for m in modules if len(m) >= block_in_mhg]
+    valid_mhg = []
+    for m in modules:
+        valid_mhg.append([b for b in m if b[1][0] <= b[1][1]])
     logger.info("everything finished")
-    return modules
+    return valid_mhg
     
     
 
