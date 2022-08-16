@@ -20,15 +20,15 @@ def blastn_next(ready_MHG_pair, blastn_dir, temp_genome_path):
             break
     
     #有了两个genome path，接下来makeblastdb了
-    make_db_command_A = f"makeblastdb -in {child_A_genome_path} -dbtype nucl"
-    make_db_command_B = f"makeblastdb -in {child_B_genome_path} -dbtype nucl"
+    make_db_command_A = f"makeblastdb -in '{child_A_genome_path}' -dbtype nucl"
+    make_db_command_B = f"makeblastdb -in '{child_B_genome_path}' -dbtype nucl"
+    
     os.system(make_db_command_A)
     os.system(make_db_command_B)
 
     #有了blast db, 接下来blastn
     blastn_output = os.path.join(blastn_dir,f'{child_A},{child_B}.xml')
-    blastn_command = f"blastn -query {child_A_genome_path} -db {child_B_genome_path} -outfmt 5 -out {blastn_output} -word_size 7 -gapopen 5 -gapextend 2"
+    blastn_command = f"blastn -query '{child_A_genome_path}' -db '{child_B_genome_path}' -outfmt 5 -out '{blastn_output}' -word_size 7 -gapopen 5 -gapextend 2"
     os.system(blastn_command)
 
     return blastn_output
-

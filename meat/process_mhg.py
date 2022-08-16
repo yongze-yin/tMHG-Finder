@@ -105,7 +105,7 @@ def mafft_consensus_mhg(pangenome_mhg_list, accDic, temp_mafft_path = 'temp_maff
         if len(mhg_string_list) > 1:
             # mhg contains at least 2 blocks
             alignBlocksInModule(mhg_string_list, accDic, temp_mafft_path)
-            command = f"mafft {temp_mafft_path}"
+            command = f"mafft --quiet {temp_mafft_path}"
             process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
             output, error = process.communicate()
             mafft_fasta_string = str(output, 'utf-8')
@@ -143,13 +143,13 @@ def ref_alignment_to_fasta(internal_node_taxa, temp_genome_dir, refName_refBlcok
         f.write(f"{ref_seq}\n")
     f.close()
 
-accDic = {}
-seqFile = open('temp/cat.fa')
-lines = (x[1] for x in groupby(seqFile, lambda line: line[0] == ">"))
-for seqName in lines:
-    seqName = seqName.__next__()[1:].strip()
-    seq = "".join(s.strip() for s in lines.__next__())
-    accDic[seqName] = seq
+# accDic = {}
+# seqFile = open('temp/cat.fa')
+# lines = (x[1] for x in groupby(seqFile, lambda line: line[0] == ">"))
+# for seqName in lines:
+#     seqName = seqName.__next__()[1:].strip()
+#     seq = "".join(s.strip() for s in lines.__next__())
+#     accDic[seqName] = seq
 
 # mhg_list = pangenome([((('G000006925', (1321493, 1385605)), (1337273, 1337298), '-'), (('G000299455', (2818030, 2881682)), (2865878, 2865903), '+')), ((('G000006925', (4805348, 4805944)), (4805348, 4805944), '+'), (('G000299455', (1462059, 1462655)), (1462059, 1462655), '-')), ((('G000006925', (4706174, 4706226)), (4706174, 4706226), '+'), (('G000299455', (3211410, 3211462)), (3211410, 3211462), '+')), ((('G000006925', (2756889, 2766574)), (2765664, 2765902), '-'), (('G000299455', (1277999, 1282453)), (1278671, 1278909), '+')), ((('G000006925', (2849870, 2870340)), (2858926, 2862839), '-'), (('G000299455', (1167028, 1178705)), (1167028, 1170941), '+'))], accDic)
 # print(mhg_list)

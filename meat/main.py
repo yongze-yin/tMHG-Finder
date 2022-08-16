@@ -38,8 +38,9 @@ while remaining_pair:
             mhg_list = MHG_partition.mhg(df, 1)
             pan_mhg_list = consensus_mhg.consensus_to_blocks(mhg_list, ready_MHG_dict)
         refName_refBlcok_dict, ref_mhg_dict = process_mhg.mafft_consensus_mhg(pan_mhg_list, accDic)
-        visited_node_MHG[internal_node_taxa] = [refName_refBlcok_dict, ref_mhg_dict]
+        merged_internal_name = internal_node_taxa.replace(",","|")
+        visited_node_MHG[merged_internal_name] = [refName_refBlcok_dict, ref_mhg_dict]
         # Convert consensus ref alignments to sequences, write to a new fasta and be ready for next blastn
-        process_mhg.ref_alignment_to_fasta(internal_node_taxa, temp_genome_dir, refName_refBlcok_dict)
+        process_mhg.ref_alignment_to_fasta(merged_internal_name, temp_genome_dir, refName_refBlcok_dict)
     else:
         print("Next internal node is not ready")

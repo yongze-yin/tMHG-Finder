@@ -16,10 +16,11 @@ import logging
 import copy
 warnings.filterwarnings('ignore')
 
-def parseBlastXML(filePath):
+def parseBlastXML(filePath, align_len_filter = 60):
     """
     Convert a blast xml file to a dataframe storing all pairwise mapping information
     """ 
+    check_dict = defaultdict(lambda: [])
     queryList, subjectList, percentIdentityList, alignmentLenList, mismatchList, gapList, qStartList, qEndList, sStartList, sEndList, evalList, bitScoreList, qSeqList, sSeqList = [],[],[],[],[],[],[],[],[],[],[],[],[],[]
     f = open(filePath)
     blast_records = NCBIXML.parse(f)
@@ -30,6 +31,8 @@ def parseBlastXML(filePath):
             for hsp in alignment.hsps:
                 percentIdentity = round(hsp.identities/hsp.align_length*100,3)
                 alignLength = hsp.align_length
+                if alignLength < align_len_filter:
+                    continue
                 mismatch = hsp.align_length - hsp.identities - hsp.gaps
                 gaps = hsp.gaps
                 qStart = hsp.query_start
@@ -55,21 +58,26 @@ def parseBlastXML(filePath):
                 bitScoreList.append(bitScore)
                 qSeqList.append(qSeq)
                 sSeqList.append(sSeq)
+                check_dict[(queryAccVer,subjectAccVer)].append((qStart,qEnd,sStart,sEnd))
     df = pd.DataFrame({'queryAccVer':queryList,'subjectAccVer':subjectList, 'identity':percentIdentityList, 'alignmentLength':alignmentLenList,
                       'mismatches':mismatchList, 'gaps':gapList, 'qStart':qStartList,'qEnd':qEndList,'sStart':sStartList,'sEnd':sEndList,
                       'evalue':evalList, 'bitScore':bitScoreList,'qSeq':qSeqList, 'sSeq':sSeqList})
-    return df, list(zip(qStartList, qEndList, sStartList, sEndList))
+    check_dict = {key:check_dict[key] for key in check_dict.keys() if len(check_dict[key]) > 1}
+    return df, check_dict
 
-def trim_fully_contain(df, check_list):
-    drop_index_list = []
-    for l in check_list:
-        qStart, qEnd, sStart, sEnd = l[0], l[1], l[2], l[3]
-        sub_df = df[(df.qStart >= qStart) & (df.qEnd <= qEnd) & (df.sStart >= sStart) &(df.sEnd <= sEnd)]
-        if sub_df.shape[0] > 1:
-            sub_df = sub_df.sort_values(by=['alignmentLength'], ascending=False)
-            overlap_index_list = list(sub_df.index.values)[1:]
-            drop_index_list += overlap_index_list
-    df = df.drop(df.index[drop_index_list]).reset_index(drop=True)
+def trim_fully_contain(df, check_dict):
+    drop_index_set = set()
+    for pair in check_dict.keys():
+        query, subject = pair[0],pair[1]        
+        subDf = df[(df.queryAccVer == query) & (df.subjectAccVer == subject)]
+        for l in check_dict[pair]:
+            qStart, qEnd, sStart, sEnd = l[0], l[1], l[2], l[3]
+            overlap_df = subDf[(subDf.qStart >= qStart) & (subDf.qEnd <= qEnd) & (subDf.sStart >= sStart) &(subDf.sEnd <= sEnd)]
+            if overlap_df.shape[0] > 1:
+                overlap_df = overlap_df.sort_values(by=['alignmentLength'], ascending=False)
+                overlap_index_set = set(list(overlap_df.index.values)[1:])
+                drop_index_set = drop_index_set.union(overlap_index_set)
+    df = df.drop(df.index[list(drop_index_set)]).reset_index(drop=True)
     return df
 
 def seqToBinary(seq):

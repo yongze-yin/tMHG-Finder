@@ -17,11 +17,11 @@ def partition_ref_mhg(ref_represented_block_list, ref_start, ref_end, ref_direct
         block_direction = actual_block.get_direction()
         block_alignment = actual_block.get_alignment()
         new_block_alignment = block_alignment[ref_start:ref_end][:]
-        if block_direction == ref_direction:
-            new_block_start = block_start + count_nuc(block_alignment[:block_start])
+        if block_direction == "+":
+            new_block_start = block_start + count_nuc(block_alignment[:ref_start])
             new_block_end = new_block_start + count_nuc(new_block_alignment)
         else:
-            new_block_end = block_end - count_nuc(block_alignment[:block_start])
+            new_block_end = block_end - count_nuc(block_alignment[:ref_start])
             new_block_start = new_block_end - count_nuc(new_block_alignment)
         if ref_direction == '+':
             block_string = f"{acc}|{new_block_start}|{new_block_end}|{block_direction}"
@@ -29,6 +29,7 @@ def partition_ref_mhg(ref_represented_block_list, ref_start, ref_end, ref_direct
         else:
             block_string = f"{acc}|{new_block_start}|{new_block_end}|{change_direction(block_direction)}"
             new_block = mhg_obj.block(block_string, new_block_alignment)
+            
         partition_block_list.append(new_block)
 
     return partition_block_list
