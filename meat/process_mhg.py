@@ -9,7 +9,7 @@ import shlex
 import random
 import mhg_obj
 
-def pangenome(mhg_list, accDic):
+def pangenome_leaf(mhg_list, accDic):
     # Take >=2 blocks MHG list as input, intersect and complement with their whole genomes using
     # bedtools. Include all single-block MHGs and outputs the updated mhg_list which is like
     # a pangenome. Each block in each MHG is in the format: acc|start|end|direction
@@ -28,6 +28,37 @@ def pangenome(mhg_list, accDic):
 
     for i in range(len(pangenome_mhg_list)):
         pangenome_mhg_list[i] = [f"{b[0][0]}|{b[1][0]}|{b[1][1]}|{b[2]}" for b in pangenome_mhg_list[i]]
+
+    command = 'bedtools subtract -a acc.bed -b mhg.bed > single_block_mhg.bed'
+    os.system(command)
+    single_block_mhg_df = pd.read_csv('single_block_mhg.bed',delimiter='\t',header=None)
+    single_block_mhg_df.columns = ['id','start','end']
+    direction_list = list('+'*int(single_block_mhg_df.shape[0]))
+    single_block_acc_list = list(single_block_mhg_df['id'])
+    single_block_start_list = list(single_block_mhg_df['start'].astype(str))
+    single_block_end_list = list(single_block_mhg_df['end'].astype(str))
+    single_block_mhg_list = list(zip(single_block_acc_list,single_block_start_list,single_block_end_list,direction_list))
+    single_block_mhg_list = [['|'.join(list(m))] for m in single_block_mhg_list]
+    pangenome_mhg_list = pangenome_mhg_list + single_block_mhg_list
+
+    return pangenome_mhg_list
+
+def pangenome_internal(mhg_list, accDic):
+    pangenome_mhg_list = mhg_list[:]
+    block_list = [b for m in pangenome_mhg_list for b in m]
+    acc_list = [b.get_acc() for b in block_list]
+    start_list = [b.get_start() for b in block_list]
+    end_list = [b.get_end() for b in block_list]
+    mhg_df = pd.DataFrame(list(zip(acc_list,start_list,end_list)), columns = ['id','start','end'])
+    mhg_df.to_csv('mhg.bed',header=False, index = False,sep='\t')
+    f = open('acc.bed','w')
+    for acc in list(set(mhg_df['id'])):
+        genome_length = len(accDic[acc])
+        f.write(f"{acc}\t{1}\t{genome_length}\n")
+    f.close()
+
+    for i in range(len(pangenome_mhg_list)):
+        pangenome_mhg_list[i] = [b.block_string for b in pangenome_mhg_list[i]]
 
     command = 'bedtools subtract -a acc.bed -b mhg.bed > single_block_mhg.bed'
     os.system(command)

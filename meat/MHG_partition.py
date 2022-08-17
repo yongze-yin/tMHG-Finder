@@ -1413,14 +1413,13 @@ def main(logger, G, block_in_mhg, tempBedFile = 'bedtoolTemp.txt'):
         edgeList = list(S.edges())
         numberOfNodes = len(nodeList)
         numberOfEdges = len(edgeList)
-        logger.info(f"cc number {counter} is on the show being visited")
+        logger.info(f"cc number {counter} is on the show being visited with {numberOfEdges} edges")
         big_cc = False
         if numberOfEdges > 100000:
             logger.info(f"cc number {counter} is a big cc, truly big one, will take a dozen of hours")
             big_cc = True
             big_cc_edge_count = numberOfEdges
         elif numberOfEdges > 10000:
-            logger.info(f"cc number {counter} has {numberOfEdges} edges")
             logger.info(f"cc number {counter} is a big cc, big but not that big, but still big; could take a few hours")
             big_cc = True
             big_cc_edge_count = numberOfEdges

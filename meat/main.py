@@ -11,6 +11,7 @@ kmer_size = 16
 thread = 1
 mash_tree_path = "nj.newick"
 blastn_dir = "temp_blastn"
+mhg_output_dir = "temp_far_mhg"
 
 # Concatenate fasta genomes to a directory; All assemblies are concat to the same file
 accDic = guide_tree_compute.concat_fasta(test_genome_dir, temp_genome_dir)
@@ -24,19 +25,17 @@ visited_node_MHG, remaining_pair = guide_tree_group.initial_taxa_internal(reroot
 while remaining_pair:
     next_internal_ready_boolean, internal_node_taxa, ready_MHG_dict, visited_node_MHG, remaining_pair = guide_tree_group.give_me_the_next_visit(visited_node_MHG, remaining_pair)
     if next_internal_ready_boolean:
-        #这里现在不行 assume的是两个children都是leaf taxa；如果一个children是internal node，blastn_next要重新写
         blastn_out_path = blastn_process.blastn_next(ready_MHG_dict, blastn_dir, temp_genome_dir)
-        df, check_list = MHG_partition.parseBlastXML(blastn_out_path)
-        df = MHG_partition.trim_fully_contain(df, check_list)
+        df, check_dict = MHG_partition.parseBlastXML(blastn_out_path)
+        df = MHG_partition.trim_fully_contain(df, check_dict)
+        mhg_list = MHG_partition.mhg(df, 2)
         if '|' not in internal_node_taxa:
             # Case 1: two children nodes are both leaf nodes
-            mhg_list = MHG_partition.mhg(df, 2)
-            pan_mhg_list = process_mhg.pangenome(mhg_list, accDic)
+            pan_mhg_list = process_mhg.pangenome_leaf(mhg_list, accDic)
         else:
             # Case 2: two children nodes have an internal node
-            print("two children nodes have an internal node")
-            mhg_list = MHG_partition.mhg(df, 1)
-            pan_mhg_list = consensus_mhg.consensus_to_blocks(mhg_list, ready_MHG_dict)
+            consensus_mhg_list = consensus_mhg.consensus_to_blocks(mhg_list, ready_MHG_dict)
+            pan_mhg_list = process_mhg.pangenome_internal(consensus_mhg_list, accDic)
         refName_refBlcok_dict, ref_mhg_dict = process_mhg.mafft_consensus_mhg(pan_mhg_list, accDic)
         merged_internal_name = internal_node_taxa.replace(",","|")
         visited_node_MHG[merged_internal_name] = [refName_refBlcok_dict, ref_mhg_dict]
@@ -44,3 +43,21 @@ while remaining_pair:
         process_mhg.ref_alignment_to_fasta(merged_internal_name, temp_genome_dir, refName_refBlcok_dict)
     else:
         print("Next internal node is not ready")
+
+def mhg_output(mhg_output_dir, visited_node_MHG):
+    os.mkdir(mhg_output_dir)
+    for key in visited_node_MHG:
+        if visited_node_MHG[key] == None:
+            continue
+        file_name = os.path.join(mhg_output_dir,f"{key}.txt")
+        f = open(file_name,'w')
+        ref_mhg_dict = visited_node_MHG[key][1]
+        internal_node_mhg_list = list(ref_mhg_dict.values())
+        print(key, len(internal_node_mhg_list))
+        for mhg in internal_node_mhg_list:
+            mhg_list = mhg.mhg_list
+            block_string_list = [block.block_string for block in mhg_list]
+            f.write(','.join(block_string_list)+'\n')
+        f.close()
+        
+mhg_output(mhg_output_dir, visited_node_MHG)
