@@ -3,14 +3,13 @@ from itertools import groupby
 
 def parse_fasta(genomeDirectory):
     seqDic = {}
-
     for genome in os.listdir(genomeDirectory):
         if "G" not in genome or ".n" in genome:
             continue
         if "ref" in genome or "|" in genome:
             continue
         organism = genome[:genome.find('.fa')]
-        seqFile = open(genomeDirectory+genome)
+        seqFile = open(os.path.join(genomeDirectory,genome))
         lines = (x[1] for x in groupby(seqFile, lambda line: line[0] == ">"))
         for seqName in lines:
             seqName = seqName.__next__()[1:].strip()
