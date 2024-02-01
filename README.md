@@ -1,8 +1,7 @@
-# MHG-EVO
+# MHG-EVO: _de Novo_ Tree-Based Maximal Homologous Group Finder
 
 ![Algorithm Overview](https://github.com/yongze-yin/MHG-EVO/blob/main/algorithm.png)
 
-## **MHG-EVO** _de Novo_ Tree-Based Maximal Homologous Group Finder
 ```
 MHG-EVO: Guide-Tree Based Homology Group Finder
 
