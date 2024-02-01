@@ -1,8 +1,8 @@
-# MHG-Finder
+# MHG-EVO
 
-![Algorithm Overview](https://github.com/yongze-yin/MHG-EVO/main/algorithm.png)
+![Algorithm Overview](https://github.com/yongze-yin/MHG-EVO/blob/main/algorithm.png)
 
-## **MHG Partition** Alignment Graph Construction and Traversal
+## **MHG-EVO** _de Novo_ Tree-Based Maximal Homologous Group Finder
 ```
 MHG-EVO: Guide-Tree Based Homology Group Finder
 
