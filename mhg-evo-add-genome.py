@@ -155,7 +155,7 @@ def main(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_temp_genom
             
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="MHG-EVO: add new genomes to an already partitioned set of existing genomes")
+    parser = argparse.ArgumentParser(description="mhg-evo-add-genome: add new genomes to an already partitioned set of existing genomes")
     parser.add_argument('-og',"--old_temp_genome_dir", type=str, required=True, help="Path to the old mhg-evo temp genome directory, this is NOT the previous genome directory, but the mhg-evo temporary genome directory")
     parser.add_argument('-om',"--old_mhg_output_dir", type=str, required=True, help="Path to the old MHG-EVO output directory which should contain an MHG set for each internal node")
     parser.add_argument('-g',"--new_genome_dir", type=str, required=True, help="Directory contaning the new set of genomes")
