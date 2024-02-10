@@ -2,6 +2,7 @@
 
 We are now moving MHG-EVO to conda for an easier installation. 
 \
+\
 MHG-EVO is an extension of our previous MHG-Finder package. MHG-EVO improves our prior work two-fold: (i) it scales to larger bacterial genome datasets, (ii) it provides intermediate MHGs involving subsets of input genomes. MHG-EVO leverages the MinHash-based alignment-free distance estimator Mash, enabling a fast calculation of pairwise genomic distances between input genomes. Subsequently, neighbor-joining is employed on the distance matrix to sketch a guide tree determining the MHG partition order. Given a guide tree, the MHG partitioning at each internal node involves five steps: 
 (1) BLASTn for pairwise local alignments
 (2) sequence pile-up
