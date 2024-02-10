@@ -13,7 +13,6 @@ The guide tree used by MHG-EVO can be either user-provided or auto-estimated. An
 
 \
 ![Algorithm Overview](https://github.com/yongze-yin/MHG-EVO/blob/main/algorithm.png)
-\
 
 ```
 MHG-EVO: Guide-Tree Based Homology Group Finder
