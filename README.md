@@ -38,9 +38,8 @@ optional arguments:
                         Boolean value determining whether to reroot the guide
                         tree or not. If this is set to True, it will reroot
                         the guide tree changing the MHG output order to
-                        minimize the number of total internal nodes. If this
-                        is False, it will keep the MHG visiting order as it
-                        is.
+                        minimize the tree height. If this is False, it will keep 
+                        the MHG visiting order as it is.
   -k KMER_SIZE, --kmer_size KMER_SIZE
                         Kmer size for Mash, default 16
   -t THREAD, --thread THREAD
@@ -86,9 +85,8 @@ optional arguments:
                         Boolean value determining whether to reroot the guide
                         tree or not. If this is set to True, it will reroot
                         the guide tree changing the MHG output order to
-                        minimize the number of total internal nodes. If this
-                        is False, it will keep the MHG visiting order as it
-                        is.
+                        minimize the tree height. If this is False, it will keep 
+                        the MHG visiting order as it is.
   -k KMER_SIZE, --kmer_size KMER_SIZE
                         Kmer size for Mash, default 16
   -t THREAD, --thread THREAD
