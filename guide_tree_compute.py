@@ -63,6 +63,37 @@ def concat_fasta(genomeDir, tempDir, k):
     f.write('\n'.join(cat_fa))
     f.close()
     return accDic
+
+def distance_matrix_only(tempDir, k = 16, thread = 1):
+    """
+    Given a directory of concatenated fasta genomes, construct a pairwise distance 
+    matrix by MASH with default kmer length 16bp and 1 thread.
+    """
+    pairwise_distance_dic = defaultdict(lambda: {})
+    cat_fa_path = os.path.join(tempDir, 'cat.fa')
+    command = f'mash dist -k {k} -p {thread} -i {cat_fa_path} {cat_fa_path}'
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    entryList = str(output, 'utf-8').split('\n')[:-1]
+    for entry in entryList:
+        entry = entry.split('\t')
+        pairwise_distance_dic[entry[0]][entry[1]] = float(entry[2])
+    organisms = sorted(list(pairwise_distance_dic.keys()))
+    matrix = []
+    for i in range(len(organisms)):
+        i_th = organisms[i]
+        row = [pairwise_distance_dic[organisms[j]][i_th] for j in range(i)]
+        row.append(0)
+        matrix.append(row)
+    distance_matrix = DistanceMatrix(organisms, matrix)
+    
+    distance_matrix_dict = dict()
+    labels = distance_matrix.names
+    index_label_dict = {i:taxon for i,taxon in enumerate(distance_matrix.names)}
+    for i,taxon in enumerate(labels):
+        distance_matrix_dict[taxon] = {index_label_dict[j]:distance for j, distance in enumerate(distance_matrix[i])}
+
+    return distance_matrix_dict
     
 def mash_distance_matrix_njtree(tempDir, newick_dest, k = 16, thread = 1):
     """

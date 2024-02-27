@@ -20,6 +20,7 @@ def main(genome_dir, temp_genome_dir, kmer_size, thread, mash_tree_path, blastn_
         rerooted_tree = guide_tree_group.shortest_reroot(mash_tree_path, reroot)
     else:
         # Use user-provided tree
+        distance_matrix_dict = guide_tree_compute.distance_matrix_only(temp_genome_dir, kmer_size, thread)
         rerooted_tree = guide_tree_group.shortest_reroot(customized_tree_path, reroot)
     # Visited_node_MHG: internal node(key), MHG set(value); remaining_pair: list of remaining 
     visited_node_MHG, remaining_pair = guide_tree_group.initial_taxa_internal(rerooted_tree)
