@@ -24,6 +24,7 @@ def main(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_temp_genom
         rerooted_tree = guide_tree_group.shortest_reroot(mash_tree_path, reroot)
     else:
         # Use user-provided tree
+        distance_matrix_dict = guide_tree_compute.distance_matrix_only(temp_genome_dir, kmer_size, thread)
         rerooted_tree = guide_tree_group.shortest_reroot(customized_tree_path, reroot)
     # Visited_node_MHG: internal node(key), MHG set(value); remaining_pair: list of remaining 
     visited_node_MHG, remaining_pair = guide_tree_group.initial_taxa_internal(rerooted_tree)
@@ -150,6 +151,8 @@ def main(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_temp_genom
             refName_refBlcok_dict, ref_mhg_dict = process_mhg.mafft_consensus_mhg(pan_mhg_list, accDic, thread)
             visited_node_MHG[merged_internal_name] = [refName_refBlcok_dict, ref_mhg_dict]
             process_mhg.write_mhg_n_pangenome(merged_internal_name, hash_code_prefix, new_temp_genome_dir, mhg_output_dir, refName_refBlcok_dict, ref_mhg_dict)
+            for child in ready_MHG_dict:
+                visited_node_MHG.pop(child, None)
         else:
             raise Exception("Next internal node is not ready")
             

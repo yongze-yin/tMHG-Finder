@@ -50,6 +50,8 @@ def main(genome_dir, temp_genome_dir, kmer_size, thread, mash_tree_path, blastn_
             refName_refBlcok_dict, ref_mhg_dict = process_mhg.mafft_consensus_mhg(pan_mhg_list, accDic, thread)
             visited_node_MHG[merged_internal_name] = [refName_refBlcok_dict, ref_mhg_dict]
             process_mhg.write_mhg_n_pangenome(merged_internal_name, hash_code_prefix, temp_genome_dir, mhg_output_dir, refName_refBlcok_dict, ref_mhg_dict)
+            for child in ready_MHG_dict:
+                visited_node_MHG.pop(child, None)
         else:
             raise Exception("Next internal node is not ready")
             
