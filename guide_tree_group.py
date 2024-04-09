@@ -91,11 +91,14 @@ def give_me_the_next_visit(visited_node_MHG, remaining_pair):
     updated_*: if boolean if true, remove the nodes from the record; else return the record.
     """
     for node in remaining_pair:
-        two_nodes = set(node.split(','))
-        if two_nodes.issubset(set(visited_node_MHG.keys())):
+        two_nodes = node.split(',')
+        left_n, right_n = two_nodes[0], two_nodes[1]
+        left_n_tup, right_n_tup = tuple(sorted(left_n.split("|"))), tuple(sorted(right_n.split("|")))
+        sorted_tuple_key_dict = {tuple(sorted(key.split("|"))):key for key in visited_node_MHG}
+        if left_n_tup in sorted_tuple_key_dict and right_n_tup in sorted_tuple_key_dict:
             ready_MHG = {}
             remaining_pair.remove(node)
-            for n in two_nodes:
-                ready_MHG[n] = copy.deepcopy(visited_node_MHG[n])
+            ready_MHG[sorted_tuple_key_dict[left_n_tup]] = copy.deepcopy(visited_node_MHG[sorted_tuple_key_dict[left_n_tup]])
+            ready_MHG[sorted_tuple_key_dict[right_n_tup]] = copy.deepcopy(visited_node_MHG[sorted_tuple_key_dict[right_n_tup]])
             return True, node, ready_MHG, visited_node_MHG, remaining_pair
     return False, None, None, visited_node_MHG, remaining_pair
