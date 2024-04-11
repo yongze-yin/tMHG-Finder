@@ -15,6 +15,29 @@ The guide tree used by tMHG-Finder can be either user-provided or auto-estimated
 \
 ![Algorithm Overview](https://github.com/yongze-yin/tMHG-Finder/blob/main/algorithm.png)
 
+## Installation Option: git clone 
+Using git clone, please install the below dependencies manually:
+
+> [Networkx](https://networkx.org/)
+
+> [Biopython](https://biopython.org/)
+
+> [BEDtools](https://bedtools.readthedocs.io/en/latest/)
+
+> [Pathos](https://pypi.org/project/pathos/)
+
+> [MAFFT](https://mafft.cbrc.jp/alignment/software/source.html)
+
+> [Mash>](https://github.com/marbl/Mash)
+
+Also, there are required built-in python packages:
+
+> [numpy](https://pypi.org/project/numpy/)
+
+> [pandas](https://pypi.org/project/pandas/)
+
+> [argparse](https://pypi.org/project/argparse/)
+
 ```
 usage: tMHG-Finder.py [-h] -g GENOME [-o MHG_OUTPUT_DIR] [-tg TEMP_DIR] [-b BLASTN_DIR]
                       [--mash_tree_path MASH_TREE_PATH]
