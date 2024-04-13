@@ -7,9 +7,10 @@ from collections import Counter
 import subprocess
 import shlex
 import random
-import mhg_obj
 import hashlib
 from pathos.multiprocessing import ProcessingPool
+
+from tmhgf import MHGObj
 
 mhg_length_threshold = 60
 
@@ -129,7 +130,7 @@ def alignBlocksInModule(mhg, accDic, temp_mafft_path):
     
 def mafft_on_single_mhg(i_mhgString_accDic_tuple):
     i, mhg_string_list, accDic = i_mhgString_accDic_tuple[0], i_mhgString_accDic_tuple[1], i_mhgString_accDic_tuple[2]
-    mhg = mhg_obj.mhg([])
+    mhg = MHGObj.mhg([])
     ref_name = f"ref_{i}"
     temp_mafft_path = f"temp_mafft_{i}.fasta"
     if len(mhg_string_list) > 1:
@@ -142,9 +143,9 @@ def mafft_on_single_mhg(i_mhgString_accDic_tuple):
         mafft_file = StringIO(mafft_fasta_string)
         alignment = AlignIO.read(mafft_file, "fasta")
         ref_alignment = consensus_majority_voting(alignment)
-        ref_block = mhg_obj.block(ref_name, ref_alignment)
+        ref_block = MHGObj.block(ref_name, ref_alignment)
         for msa in alignment:
-            block = mhg_obj.block(msa.id, msa.seq)
+            block = MHGObj.block(msa.id, msa.seq)
             mhg.add_block(block)
         os.remove(temp_mafft_path)
     else:
@@ -152,9 +153,9 @@ def mafft_on_single_mhg(i_mhgString_accDic_tuple):
         block_string = mhg_string_list[0]
         block_string_to_list = block_string.split('|')
         block_seq = accDic[block_string_to_list[0]][int(block_string_to_list[1]):int(block_string_to_list[2])]
-        single_block = mhg_obj.block(block_string, block_seq[:])
+        single_block = MHGObj.block(block_string, block_seq[:])
         mhg.add_block(single_block)
-        ref_block = mhg_obj.block(ref_name, block_seq[:])
+        ref_block = MHGObj.block(ref_name, block_seq[:])
         
     return (ref_name, ref_block, mhg)
 

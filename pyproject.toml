@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tMHG-Finder"
+version = "1.0.0"
+requires-python = ">= 3.7"
+dependencies = [
+  "numpy",
+  "pandas",
+  "biopython",
+  "pathos",
+  "networkx", 
+  "dendropy",
+]
+authors = [
+  {name = "Yongze Yin", email = "yy40@rice.edu"},
+]
+maintainers = [
+  {name = "Yongze Yin", email = "yy40@rice.edu"},
+]
+readme = {file = "README.txt", content-type = "text/markdown"}
+license = {file = "LICENSE"}
+keywords = ["homology", "alignment"]
+
+[project.scripts]
+tmhgf = "tmhgf.tMHGFinder:main"

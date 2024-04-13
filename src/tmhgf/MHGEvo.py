@@ -2,12 +2,12 @@ import os
 import copy
 import hashlib
 import argparse
-import process_mhg
-import consensus_mhg
-import blastn_process
-import mhg_partition_mp
-import guide_tree_group
-import guide_tree_compute
+import tmhgf.ProcessMHG
+import tmhgf.ConcsensusMHG
+import tmhgf.BlastnProcess
+import tmhgf.MHGPartitionMP
+import tmhgf.GuideTreeGroup
+import tmhgf.GuideTreeCompute
 
 def main(genome_dir, temp_genome_dir, kmer_size, thread, mash_tree_path, blastn_dir, mhg_output_dir, reroot, alignment_length_threshold, customized_tree_path):
     # Concatenate fasta genomes to a directory; All assemblies are concat to the same file
@@ -56,18 +56,18 @@ def main(genome_dir, temp_genome_dir, kmer_size, thread, mash_tree_path, blastn_
             raise Exception("Next internal node is not ready")
             
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="tMHG-Finder: Guide-Tree Based Homology Group Finder")
+    parser = argparse.ArgumentParser(description="MHG-EVO: Guide-Tree Based Homology Group Finder")
     parser.add_argument('-g','--genome',type=str, required=True, help="Genome nucleotide sequence directory")
-    parser.add_argument('-o','--mhg_output_dir', default = "tMHG_output/", help='Directory storing all tMHG-Finder outputs')
-    parser.add_argument('-tg','--temp_dir', default= 'tMHG_temp_genome/', help='Directory storing a copy of each genome and representative genomes')
-    parser.add_argument('-b','--blastn_dir', default = "tMHG_blastn/", help='Directory storing blastn results')
+    parser.add_argument('-o','--mhg_output_dir', default = "mhg_evo_output/", help='Directory storing all MHG-EVO outputs')
+    parser.add_argument('-tg','--temp_dir', default= 'mhg_evo_temp_genome/', help='Directory storing a copy of each genome and representative genomes')
+    parser.add_argument('-b','--blastn_dir', default = "mhg_evo_blastn/", help='Directory storing blastn results')
     parser.add_argument('--mash_tree_path', default = "mash_nj_tree.newick", help='Mash-estimated guide tree path')
     parser.add_argument('--customized_tree_path', default = None, help='Path to customized tree instead of using auto-estimated tree')
     parser.add_argument('-r','--reroot', type=bool, default = False, help='Boolean value determining whether to reroot the guide tree or not. If this is set to True, it will reroot the guide tree changing the MHG output order to minimize the tree height. If this is False, it will keep the MHG visiting order as it is.')
     parser.add_argument('-k','--kmer_size', type=int, default = 16, help='Kmer size for Mash, default 16')
     parser.add_argument('-t','--thread', type=int, default = 8, help='Number of threads')
     parser.add_argument('-a','--alignment_length_threshold', type=int, default = 200,
-                        help='Alignment length threshold in base pair. tMHG-Finder does not consider MHGs shorter than 60 base pairs by default. If this threshold is too low, it will result in an excessive amount of short MHGs and a longer runtime.')
+                        help='Alignment length threshold in base pair. MHG-EVO does not consider MHGs shorter than 60 base pairs by default. If this threshold is too low, it will result in an excessive amount of short MHGs and a longer runtime.')
 
     args = parser.parse_args()
 
