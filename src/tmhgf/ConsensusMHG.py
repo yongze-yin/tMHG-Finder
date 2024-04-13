@@ -1,5 +1,5 @@
 import os
-import tmhgf.MHGObj
+from tmhgf import MHGObj
 from collections import defaultdict
 import subprocess
 import shlex
@@ -29,10 +29,10 @@ def partition_ref_mhg(ref_represented_block_list, ref_start, ref_end, ref_direct
             new_block_start = new_block_end - count_nuc(new_block_alignment)
         if ref_direction == '+':
             block_string = f"{acc}|{new_block_start}|{new_block_end}|{block_direction}"
-            new_block = mhg_obj.block(block_string, new_block_alignment)    
+            new_block = MHGObj.block(block_string, new_block_alignment)    
         else:
             block_string = f"{acc}|{new_block_start}|{new_block_end}|{change_direction(block_direction)}"
-            new_block = mhg_obj.block(block_string, new_block_alignment)
+            new_block = MHGObj.block(block_string, new_block_alignment)
             
         partition_block_list.append(new_block)
 
@@ -51,7 +51,7 @@ def consensus_to_blocks(mhg_list, ready_MHG_dict):
             #要注意direction，如果direction不是+ 要看从尾巴开始数
             if "ref" not in acc:
                 # The block comes from a leaf taxon
-                block = mhg_obj.block(f'{acc}|{start}|{end}|{direction}', "") 
+                block = MHGObj.block(f'{acc}|{start}|{end}|{direction}', "") 
                 consensus_to_genome_mhg.append(block)
             else:
                 # The block represents a mhg
