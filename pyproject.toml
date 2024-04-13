@@ -15,10 +15,10 @@ dependencies = [
   "dendropy",
 ]
 authors = [
-  {name = "Yongze Yin", email = "yy40@rice.edu"},
+  {name = "Yongze Yin", email = "yy70@rice.edu"},
 ]
 maintainers = [
-  {name = "Yongze Yin", email = "yy40@rice.edu"},
+  {name = "Yongze Yin", email = "yy70@rice.edu"},
 ]
 readme = {file = "README.txt", content-type = "text/markdown"}
 license = {file = "LICENSE"}
