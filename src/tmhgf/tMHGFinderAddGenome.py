@@ -4,12 +4,12 @@ import copy
 import hashlib
 import dendropy
 from Bio import SeqIO
-import guide_tree_group
-import guide_tree_compute
-import blastn_process
-import mhg_partition_mp
-import process_mhg
-import consensus_mhg
+import tmhgf.GuideTreeGroup
+import tmhgf.GuideTreeCompute
+import tmhgf.BlastnProcess
+import tmhgf.MHGPartitionMP
+import tmhgf.ProcessMHG
+import tmhgf.ConsensusMHG
 
 def main(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_temp_genome_dir,
          kmer_size, thread, mash_tree_path, blastn_dir, mhg_output_dir, reroot,

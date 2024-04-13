@@ -7,9 +7,10 @@ from collections import Counter
 import subprocess
 import shlex
 import random
-import mhg_obj
 import hashlib
 from pathos.multiprocessing import ProcessingPool
+
+import tmhgf.MHGObj
 
 mhg_length_threshold = 60
 

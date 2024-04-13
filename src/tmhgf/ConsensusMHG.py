@@ -1,5 +1,5 @@
 import os
-import mhg_obj
+import tmhgf.MHGObj
 from collections import defaultdict
 import subprocess
 import shlex

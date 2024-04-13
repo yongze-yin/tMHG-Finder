@@ -2,12 +2,12 @@ import os
 import copy
 import hashlib
 import argparse
-import process_mhg
-import consensus_mhg
-import blastn_process
-import mhg_partition_mp
-import guide_tree_group
-import guide_tree_compute
+import tmhgf.ProcessMHG
+import tmhgf.ConsensusMHG
+import tmhgf.BlastnProcess
+import tmhgf.MHGPartitionMP
+import tmhgf.GuideTreeGroup
+import tmhgf.GuideTreeCompute
 
 def main(genome_dir, temp_genome_dir, kmer_size, thread, mash_tree_path, blastn_dir, mhg_output_dir, reroot, alignment_length_threshold, customized_tree_path):
     # Concatenate fasta genomes to a directory; All assemblies are concat to the same file
