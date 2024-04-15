@@ -1,6 +1,5 @@
 # tMHG-Finder: _de Novo_ Tree-Based MHG Finder
 
-[![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/version.svg)](https://anaconda.org/bioconda/tmhg)  [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/downloads.svg)](https://anaconda.org/bioconda/tmhg)
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/version.svg)](https://anaconda.org/bioconda/tmhg) [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/downloads.svg)](https://anaconda.org/bioconda/tmhg)
 \
 \
