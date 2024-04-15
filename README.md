@@ -47,26 +47,14 @@ The following command will install tMHG-Finder an all python dependencies.
 python -m pip install .
 ```
 
-Additional non-python dependencies are listed below and need to be installed manually:
-> [BEDtools](https://bedtools.readthedocs.io/en/latest/)
+Additional non-python dependencies are listed below and need to be installed manually. If Anaconda is installed, you can use the installation script for each package directly:
+> [BEDtools](https://bedtools.readthedocs.io/en/latest/)  ```conda install bioconda::bedtools```
 
-> [MAFFT](https://mafft.cbrc.jp/alignment/software/source.html)
+> [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html#downloadblastdata)  ``` conda install bioconda::blast ```
 
-> [Mash](https://github.com/marbl/Mash)
+> [MAFFT](https://mafft.cbrc.jp/alignment/software/source.html)  ``` conda install bioconda::mafft ```
 
-> [BLAST](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html#downloadblastdata)
-
-
-These python packages will be installed along with tMHG-Finder using the command above.
-> [numpy](https://pypi.org/project/numpy/)
-
-> [pandas](https://pypi.org/project/pandas/)
-
-> [Networkx](https://networkx.org/)
-
-> [Biopython](https://biopython.org/)
-
-> [Pathos](https://pypi.org/project/pathos/)
+> [Mash](https://github.com/marbl/Mash)  ``` conda install bioconda::mash ```
 
 
 ## Main Function
