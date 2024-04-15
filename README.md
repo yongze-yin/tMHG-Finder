@@ -61,6 +61,9 @@ These python packages will be installed along with tMHG-Finder using the command
 > [Biopython](https://biopython.org/)
 
 > [Pathos](https://pypi.org/project/pathos/)
+
+
+## Main Function
 ```
 $ tmhgf find --help
 usage: tmhgf find [-h] [-b BLASTN_DIR] [--mash_tree_path MASH_TREE_PATH] [--customized_tree_path CUSTOMIZED_TREE_PATH] [-r REROOT] [-k KMER_SIZE] [-t THREAD] [-a ALIGNMENT_LENGTH_THRESHOLD] -g GENOME
