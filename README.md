@@ -1,6 +1,7 @@
 # tMHG-Finder: _de Novo_ Tree-Based MHG Finder
 
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/version.svg)](https://anaconda.org/bioconda/tmhg)  [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/downloads.svg)](https://anaconda.org/bioconda/tmhg)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/version.svg)](https://anaconda.org/bioconda/tmhg) [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/downloads.svg)](https://anaconda.org/bioconda/tmhg)
 \
 \
 tMHG-Finder is an extension of our previous MHG-Finder package. tMHG-Finder improves our prior work two-fold: (i) it scales to larger bacterial genome datasets, (ii) it provides intermediate MHGs involving subsets of input genomes. tMHG-Finder leverages the MinHash-based alignment-free distance estimator Mash, enabling a fast calculation of pairwise genomic distances between input genomes. Subsequently, neighbor-joining is employed on the distance matrix to sketch a guide tree determining the MHG partition order. Given a guide tree, the MHG partitioning at each internal node involves five steps: 
@@ -30,7 +31,7 @@ Additional non-python dependencies are listed below:
 
 > [Mash>](https://github.com/marbl/Mash)
 
-> [BLAST>]([https://github.com/marbl/Mash](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html#downloadblastdata))
+> [BLAST>](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html#downloadblastdata)
 
 
 These python packages will be installed along with tMHG-Finder using the command above.
