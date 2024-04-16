@@ -1,10 +1,9 @@
 # tMHG-Finder: _de Novo_ Tree-Based MHG Finder
 
-<!---
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/version.svg)](https://anaconda.org/bioconda/tmhg) [![Anaconda-Server Badge](https://anaconda.org/bioconda/tmhg/badges/downloads.svg)](https://anaconda.org/bioconda/tmhg) 
 \
 \ 
--->
+
 tMHG-Finder is an extension of our previous MHG-Finder package. tMHG-Finder improves our prior work two-fold: (i) it scales to larger bacterial genome datasets, (ii) it provides intermediate MHGs involving subsets of input genomes. tMHG-Finder leverages the MinHash-based alignment-free distance estimator Mash, enabling a fast calculation of pairwise genomic distances between input genomes. Subsequently, neighbor-joining is employed on the distance matrix to sketch a guide tree determining the MHG partition order. Given a guide tree, the MHG partitioning at each internal node involves five steps: 
 (1) BLASTn for pairwise local alignments
 (2) sequence pile-up
@@ -17,19 +16,14 @@ The guide tree used by tMHG-Finder can be either user-provided or auto-estimated
 \
 ![Algorithm Overview](https://github.com/yongze-yin/tMHG-Finder/blob/main/algorithm.png)
 
-<!---
+
 ## Installation Option 1: conda install
-It is highly recommended to setup a new conda environment to avoid weird stuck through conda install! Installing MHG via conda will save the time figuring out the dependencies.
+It is highly recommended to setup a new conda environment! Installing MHG via conda will save the time figuring out the dependencies.
 ```
-conda create --name tmhg python=3.7 
+conda create --name tmhg
 conda activate tmhg
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
 conda install bioconda::tmhg
 ```
-
-If you encounter errors running directly ```conda install -c bioconda mhg```, try the three conda config above;
 
 If you are stuck on "solving environment", run ```conda config --remove channels conda-forge```, and then ```conda config --add channels conda-forge``` should solve the problem.
 
@@ -37,9 +31,6 @@ But again, it is highly recommend to create a brand new environment.
 
 
 ## Installation Option 2: git clone 
--->
-
-## Installation Option: git clone 
 Using git clone, please install the below dependencies manually:
 
 The following command will install tMHG-Finder an all python dependencies.
