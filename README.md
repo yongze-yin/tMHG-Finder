@@ -18,9 +18,8 @@ The guide tree used by tMHG-Finder can be either user-provided or auto-estimated
 ## Installation Option 1: conda install
 It is highly recommended to setup a new conda environment! Installing MHG via conda will save the time figuring out the dependencies.
 ```
-conda create --name tmhg
+conda create --name tmhg bioconda::tmhg
 conda activate tmhg
-conda install bioconda::tmhg
 ```
 
 If you are stuck on "solving environment", run ```conda config --remove channels conda-forge```, and then ```conda config --add channels conda-forge``` should solve the problem.
