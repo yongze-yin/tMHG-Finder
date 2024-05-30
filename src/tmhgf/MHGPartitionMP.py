@@ -95,6 +95,10 @@ def revComp(seq):
     revSeq = ''.join([dic[char] for char in seq[::-1]])
     return revSeq
 
+def calculate_mhg_length(mhg):
+    block_lengths = [(int(b[1][1]) - int(b[1][0]) + 1) for b in mhg]
+    return round(sum(block_lengths) / len(block_lengths))
+
 def blastToDf(df, threshold, constant = 1.6446838):
     """
     Input: A blast file and user preset parameter thresholds.
@@ -1407,7 +1411,7 @@ def checkPathOverlap(moduleBlockPath,genePath):
 def cc_mhg(S_ccIndex_blockInMhg_tuple):
     S = S_ccIndex_blockInMhg_tuple[0]
     cc_index = S_ccIndex_blockInMhg_tuple[1]
-    block_in_mhg = S_ccIndex_blockInMhg_tuple[2]
+    alignment_length_threshold = S_ccIndex_blockInMhg_tuple[2]
     
     valid_mhg = []
     tempA = f'tempA_{cc_index}.bed'
@@ -1495,7 +1499,7 @@ def cc_mhg(S_ccIndex_blockInMhg_tuple):
     modules = list(set([tuple(sorted(list(m_graph.nodes))) for m_graph in nodePathToModuleDic.values()]))
     for module in modules:
         module = [b for b in module if b[1][0] < b[1][1]]
-        if len(module)>= block_in_mhg:
+        if len(module)>= 2 and calculate_mhg_length(module) >= alignment_length_threshold:
             valid_mhg.append(module)
     if os.path.exists(tempA):
         os.remove(tempA)
@@ -1503,7 +1507,7 @@ def cc_mhg(S_ccIndex_blockInMhg_tuple):
         os.remove(tempB)
     return valid_mhg
 
-def mp_mhg(blastDf, block_in_mhg, thread):
+def mp_mhg(blastDf, alignment_length_threshold, thread):
     if thread > 8:
         thread = 8
     df_start_time = time.time()
@@ -1530,8 +1534,7 @@ def mp_mhg(blastDf, block_in_mhg, thread):
     logger.info(f"starting traversing the alignment graph and MHG partition")
     total_cc_number = nx.number_strongly_connected_components(G)
     logger.info(f"Total {total_cc_number} cc are waiting to be visited")
-    cc_paramater_list = [(G.subgraph(cc),i, block_in_mhg) for i,cc in enumerate(list(nx.strongly_connected_components(G)))]
-
+    cc_paramater_list = [(G.subgraph(cc),i, alignment_length_threshold) for i,cc in enumerate(list(nx.strongly_connected_components(G)))]
     logger.info(f"MHG partition started using {thread} threads")
     mp_t_start = time.time()
     p = ProcessingPool(thread)

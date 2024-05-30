@@ -40,7 +40,7 @@ def run(genome_dir, temp_genome_dir, kmer_size, thread, mash_tree_path, blastn_d
             blastn_out_path = BlastnProcess.blastn_next(ready_MHG_dict, blastn_dir, temp_genome_dir, distance_matrix_dict, thread, hash_code_prefix, node_hash_dict)
             df, check_dict = MHGPartitionMP.parseBlastXML(blastn_out_path, alignment_length_threshold)
             df = MHGPartitionMP.trim_fully_contain(df, check_dict)
-            mhg_list = MHGPartitionMP.mp_mhg(df, 2, thread)
+            mhg_list = MHGPartitionMP.mp_mhg(df, alignment_length_threshold, thread)
             if '|' not in internal_node_taxa:
                 # Case 1: two children nodes are both leaf nodes
                 pan_mhg_list = ProcessMHG.pangenome_leaf(mhg_list, accDic)
