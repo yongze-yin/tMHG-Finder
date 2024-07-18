@@ -15,7 +15,7 @@ def run_add_genome(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_
          kmer_size, thread, mash_tree_path, blastn_dir, mhg_output_dir, reroot,
          customized_tree_path, alignment_length_threshold):
     
-    accDic, genome2acc = GuideTreeCompute.concat_fasta(new_genome_dir, new_temp_genome_dir, kmer_size)
+    accDic = GuideTreeCompute.concat_fasta(new_genome_dir, new_temp_genome_dir, kmer_size)
 
     if customized_tree_path == None:
         # Use mash estimated guide tree
@@ -77,7 +77,7 @@ def run_add_genome(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_
         # load mhg, realign, update visited_node_dict
         old_mhg_path = os.path.join(old_mhg_dir,f"{old_hash_code}.txt")
         node_hash_dict[new_child_string] = old_hash_code
-        mhg_list = open(old_mhg_path).read().strip('\n').split('\n')
+        mhg_list = open(old_mhg_path).read().split('\n')[:-1]
         mhg_list = [m.split(',') for m in mhg_list]
 
         refName_refBlcok_dict, ref_mhg_dict = ProcessMHG.mafft_consensus_mhg(mhg_list, accDic, thread)
@@ -90,7 +90,7 @@ def run_add_genome(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_
 
     hash_node_file = os.path.join(old_mhg_output_dir,'hash_node.tsv')
     # node_hash_dict contains a list of finished partitioned nodes and their corresponding hashed names 
-    f = open(hash_node_file).read().strip('\n').split('\n')[1:]
+    f = open(hash_node_file).read().split('\n')[1:-1]
     for line in f:
         h = line.split('\t')[0]
         n = line.split('\t')[1]
@@ -140,14 +140,14 @@ def run_add_genome(old_temp_genome_dir, old_mhg_output_dir, new_genome_dir, new_
             blastn_out_path = BlastnProcess.blastn_next(ready_MHG_dict, blastn_dir, new_temp_genome_dir, distance_matrix_dict, thread, hash_code_prefix, node_hash_dict)
             df, check_dict = MHGPartitionMP.parseBlastXML(blastn_out_path, alignment_length_threshold)
             df = MHGPartitionMP.trim_fully_contain(df, check_dict)
-            mhg_list = MHGPartitionMP.mp_mhg(df, alignment_length_threshold, thread)
+            mhg_list = MHGPartitionMP.mp_mhg(df, 2, thread)
             if '|' not in internal_node_taxa:
                 # Case 1: two children nodes are both leaf nodes
-                pan_mhg_list = ProcessMHG.pangenome_leaf(mhg_list, accDic, genome2acc, merged_internal_name)
+                pan_mhg_list = ProcessMHG.pangenome_leaf(mhg_list, accDic)
             else:
                 # Case 2: two children nodes have an internal node
                 ConsensusMHG_list = ConsensusMHG.consensus_to_blocks(mhg_list, ready_MHG_dict)
-                pan_mhg_list = ProcessMHG.pangenome_internal(ConsensusMHG_list, accDic, genome2acc, merged_internal_name)
+                pan_mhg_list = ProcessMHG.pangenome_internal(ConsensusMHG_list, accDic)
             refName_refBlcok_dict, ref_mhg_dict = ProcessMHG.mafft_consensus_mhg(pan_mhg_list, accDic, thread)
             visited_node_MHG[merged_internal_name] = [refName_refBlcok_dict, ref_mhg_dict]
             ProcessMHG.write_mhg_n_pangenome(merged_internal_name, hash_code_prefix, new_temp_genome_dir, mhg_output_dir, refName_refBlcok_dict, ref_mhg_dict)
