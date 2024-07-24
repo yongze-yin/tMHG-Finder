@@ -48,6 +48,8 @@ def pangenome_leaf(mhg_list, accDic, genome2acc, merged_internal_name):
     single_block_mhg_list = [['|'.join(list(m))] for m in single_block_mhg_list]
     pangenome_mhg_list = pangenome_mhg_list + single_block_mhg_list
 
+    pangenome_mhg_list =  [list(set(m)) for m in mhg_list]
+
     return pangenome_mhg_list
 
 def pangenome_internal(mhg_list, accDic, genome2acc, merged_internal_name):
@@ -80,6 +82,8 @@ def pangenome_internal(mhg_list, accDic, genome2acc, merged_internal_name):
     single_block_mhg_list = list(zip(single_block_acc_list,single_block_start_list,single_block_end_list,direction_list))
     single_block_mhg_list = [['|'.join(list(m))] for m in single_block_mhg_list]
     pangenome_mhg_list = pangenome_mhg_list + single_block_mhg_list
+
+    pangenome_mhg_list =  [list(set(m)) for m in mhg_list]
 
     return pangenome_mhg_list
 
