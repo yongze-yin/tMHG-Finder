@@ -382,6 +382,46 @@ def bedtoolCall(node, nodeToPathDic, path, tempFileA, tempFileB):
 
     return overlappedPairs
 
+def bedtool_check_overlap(c_i, m_i, mhg):
+    # Input an mhg containing a list of blocks, return a non-overlapping mhg
+    bed_name = f"check_overlap_{c_i}_{m_i}.bed"
+    f = open(bed_name, 'w')
+    tuple_to_block_dict = dict()
+    for block in mhg:
+        acc, start, end = block[0][0], str(block[1][0]), str(block[1][1])
+        tuple_to_block_dict[(acc, start, end)] = block
+        f.write(f'{acc}\t{start}\t{end}\n')
+    f.close()
+    command = f'bedtools intersect -a {bed_name} -b {bed_name} -wo'
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    entryList = str(output, 'utf-8').split('\n')[:-1]
+    
+    if os.path.exists(bed_name):
+        os.remove(bed_name)
+    
+    if len(entryList) == len(mhg):
+        # No blocks are overlapping
+        return mhg
+    
+    mapped_tuple_dict = dict()
+    for line in entryList:
+        line = line.split("\t")
+        s_id, s_s, s_e, o_id, o_s, o_e = line[0], line[1], line[2], line[3], line[4], line[5]
+        subject, query = (s_id, s_s, s_e), (o_id, o_s, o_e)
+        if subject == query:
+            if subject not in mapped_tuple_dict:
+                mapped_tuple_dict[subject] = subject
+        else:
+            if int(s_e)-int(s_s) >= int(o_e)-int(o_s):
+                mapped_tuple_dict[subject] = subject
+                mapped_tuple_dict[query] = subject
+            else:
+                mapped_tuple_dict[subject] = query
+                mapped_tuple_dict[query] = query
+    
+    return [tuple_to_block_dict[tup] for tup in list(set(mapped_tuple_dict.values()))]
+
 def updateModuleTuple(blockNode,startOffSet,endOffSet, m_graph, destNode, destToSourcePath, sourceDirection,destDirection, sourceInModuleDirection,nodePartitionDic, sourceToDestArray, destToSourceArray):
     """
     Output: nodePartitionDic: the new module where the node is placed. The key is the node, and the value is the module.
@@ -1497,10 +1537,13 @@ def cc_mhg(S_ccIndex_blockInMhg_tuple):
 
     nodeToPathDic,nodePathToModuleDic = trimShortModules(nodeToPathDic,nodePathToModuleDic)
     modules = list(set([tuple(sorted(list(m_graph.nodes))) for m_graph in nodePathToModuleDic.values()]))
-    for module in modules:
+
+    for mhg_index, module in enumerate(modules):
         module = [b for b in module if b[1][0] < b[1][1]]
         if len(module)>= 2 and calculate_mhg_length(module) >= alignment_length_threshold:
-            valid_mhg.append(module)
+            non_overlap_mhg = bedtool_check_overlap(cc_index, mhg_index, module)
+            valid_mhg.append(non_overlap_mhg)
+
     if os.path.exists(tempA):
         os.remove(tempA)
     if os.path.exists(tempB):
