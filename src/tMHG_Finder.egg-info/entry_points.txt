@@ -1,2 +1,0 @@
-[console_scripts]
-tmhgf = tmhgf.tMHGFinder:main
