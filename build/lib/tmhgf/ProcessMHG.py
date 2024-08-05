@@ -48,6 +48,8 @@ def pangenome_leaf(mhg_list, accDic, genome2acc, merged_internal_name):
     single_block_mhg_list = [['|'.join(list(m))] for m in single_block_mhg_list]
     pangenome_mhg_list = pangenome_mhg_list + single_block_mhg_list
 
+    pangenome_mhg_list =  [list(set(m)) for m in pangenome_mhg_list]
+
     return pangenome_mhg_list
 
 def pangenome_internal(mhg_list, accDic, genome2acc, merged_internal_name):
@@ -80,6 +82,8 @@ def pangenome_internal(mhg_list, accDic, genome2acc, merged_internal_name):
     single_block_mhg_list = list(zip(single_block_acc_list,single_block_start_list,single_block_end_list,direction_list))
     single_block_mhg_list = [['|'.join(list(m))] for m in single_block_mhg_list]
     pangenome_mhg_list = pangenome_mhg_list + single_block_mhg_list
+
+    pangenome_mhg_list =  [list(set(m)) for m in pangenome_mhg_list]
 
     return pangenome_mhg_list
 
@@ -118,7 +122,6 @@ def alignBlocksInModule(mhg, accDic, temp_mafft_path):
     for block in mhg:
         block_list = block.split('|')
         acc = block_list[0]
-        # 这里的pathStart pathEnd都是从0开始 但blastn是从1开始
         pathStart = int(block_list[1])
         pathEnd = int(block_list[2])
         direction = block_list[3]
